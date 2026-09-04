@@ -12,86 +12,97 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for UI styling, dark gradient background, vertical layout cards, and shadows
+# Custom CSS for pure white background, simple card layout, and soft shadows
 st.markdown("""
     <style>
-    /* Global App Background */
+    /* Global App Background - Clean White */
     .stApp {
-        background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%);
-        color: #f0f6fc;
+        background-color: #ffffff;
+        color: #1f2937;
     }
-    
-    /* Title Styling */
+
+    /* Main Title Styling */
     .main-title {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #1e293b;
         text-align: center;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.2rem;
     }
-    
+
     .sub-title {
-        font-size: 1rem;
-        color: #94a3b8;
+        font-size: 0.95rem;
+        color: #64748b;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1.8rem;
     }
 
-    /* Vertical Card Layout Styling */
+    /* Vertical Form Card with Soft Shadow */
     .vertical-card {
-        background: rgba(22, 27, 34, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        padding: 24px;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(56, 189, 248, 0.1);
-        margin-bottom: 24px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        margin-bottom: 20px;
     }
 
-    /* Styled Predict Button */
+    /* Input Field Labels */
+    .stNumberInput label {
+        color: #334155 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Styled Action Button */
     div.stButton > button {
         width: 100%;
-        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #9333ea 100%);
+        background-color: #2563eb;
         color: #ffffff;
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         font-weight: 700;
-        padding: 0.85rem 1.5rem;
-        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
         border: none;
-        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
-        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        transition: all 0.2s ease-in-out;
         cursor: pointer;
     }
 
     div.stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(124, 58, 237, 0.7);
-        background: linear-gradient(90deg, #4338ca 0%, #6d28d9 50%, #7e22ce 100%);
+        background-color: #1d4ed8;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        transform: translateY(-1px);
     }
 
-    div.stButton > button:active {
-        transform: translateY(1px);
-    }
-
-    /* Output Card Box */
-    .result-box {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
-        border: 2px solid #10b981;
-        border-radius: 16px;
-        padding: 24px;
+    /* Result Boxes */
+    .result-pass {
+        background-color: #f0fdf4;
+        border: 2px solid #22c55e;
+        border-radius: 12px;
+        padding: 20px;
         text-align: center;
-        box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
-        margin-top: 20px;
+        box-shadow: 0 8px 20px rgba(34, 197, 94, 0.15);
+        margin-top: 15px;
     }
 
-    .result-score {
-        font-size: 3rem;
-        font-weight: 900;
-        color: #34d399;
-        margin: 10px 0;
+    .result-fail {
+        background-color: #fef2f2;
+        border: 2px solid #ef4444;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.15);
+        margin-top: 15px;
     }
+
+    .status-text {
+        font-size: 2.8rem;
+        font-weight: 900;
+        margin: 5px 0;
+    }
+
+    .pass-color { color: #16a34a; }
+    .fail-color { color: #dc2626; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -107,14 +118,14 @@ except Exception as e:
     st.error(f"Error loading model.pkl: {e}")
     st.stop()
 
-# Title Header
+# Application Header
 st.markdown('<div class="main-title">🎓 Student Result Predictor</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">Enter individual subject marks below to generate model output</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">Enter marks below to check student Pass or Fail status</div>', unsafe_allow_html=True)
 
-# Main Form Container (Clean Vertical Stack)
+# Main Form Container
 st.markdown('<div class="vertical-card">', unsafe_allow_html=True)
 
-st.subheader("📝 Subject Marks (0 - 100)")
+st.subheader("📝 Enter Marks (0 - 100)")
 
 # Vertical Stack Inputs
 hindi = st.number_input("Hindi", min_value=0, max_value=100, value=75, step=1)
@@ -126,10 +137,9 @@ geography = st.number_input("Geography / Geograpgy", min_value=0, max_value=100,
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Predict Trigger
-if st.button("🚀 Calculate & Predict Result"):
+# Prediction Logic
+if st.button("Calculate Result"):
     
-    # Feature dictionary matching expected names
     raw_inputs = {
         'Hindi': hindi,
         'English': english,
@@ -140,16 +150,14 @@ if st.button("🚀 Calculate & Predict Result"):
         'Geograpgy': geography
     }
 
-    # Inspect model requirements dynamically to avoid feature count mismatch errors
+    # Format input data based on model requirements
     if hasattr(model, "feature_names_in_"):
         expected_cols = list(model.feature_names_in_)
-        # Build input dataframe using exact columns model expects
         input_data = pd.DataFrame([{col: raw_inputs.get(col, 0) for col in expected_cols}])
     elif hasattr(model, "n_features_in_"):
         num_features = model.n_features_in_
         val_list = [hindi, english, science, maths, history, geography]
         
-        # Adjust array length if model expects more or fewer features
         if len(val_list) < num_features:
             val_list.extend([0] * (num_features - len(val_list)))
         elif len(val_list) > num_features:
@@ -159,24 +167,32 @@ if st.button("🚀 Calculate & Predict Result"):
     else:
         input_data = pd.DataFrame([raw_inputs])
 
-    with st.spinner("Processing input and running KNN model..."):
-        time.sleep(0.5)
+    with st.spinner("Evaluating result..."):
+        time.sleep(0.3)
         try:
-            prediction = model.predict(input_data)[0]
-            st.balloons()
+            raw_pred = model.predict(input_data)[0]
             
+            # Map prediction output: 1 -> PASS, 0 -> FAIL
+            if str(raw_pred).strip() in ['1', '1.0', 'Pass', 'PASS']:
+                status = "PASS"
+                card_style = "result-pass"
+                text_style = "pass-color"
+                st.balloons()
+            else:
+                status = "FAIL"
+                card_style = "result-fail"
+                text_style = "fail-color"
+
+            # Render output
             st.markdown(
                 f"""
-                <div class="result-box">
-                    <h3 style="margin:0; color: #94a3b8;">Predicted Result</h3>
-                    <div class="result-score">{prediction}</div>
+                <div class="{card_style}">
+                    <div style="font-weight: 600; color: #475569;">Predicted Result</div>
+                    <div class="status-text {text_style}">{status}</div>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
+            
         except Exception as err:
-            st.error(f"Prediction failed due to feature mismatch: {err}")
-            if hasattr(model, "n_features_in_"):
-                st.info(f"Model expects {model.n_features_in_} features.")
-            if hasattr(model, "feature_names_in_"):
-                st.info(f"Model expects these exact column names: {list(model.feature_names_in_)}")
+            st.error(f"Prediction error: {err}")
